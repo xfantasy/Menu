@@ -1,0 +1,26 @@
+{
+    "name": "menu",
+    "version": "1.0.0",
+    "root": "knight",
+    "description": "",
+    "homepage": "",
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "bugs": {
+        "url": ""
+    },
+    "license": "MIT",
+    "dependencies": {
+        "$"             : "$",
+        "underscore"    : "gallery/underscore/1.4.4/underscore-debug",
+        "templatable"   : "arale/widget/1.0.3/templatable",
+        "overlay"       : "arale/overlay/1.0.0/overlay-debug"
+    },
+    "tests": ["menu"],
+    "output": {
+        "menu.js": "."
+    }
+}
