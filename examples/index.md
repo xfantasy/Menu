@@ -17,12 +17,21 @@ seajs.use(['$', 'menu'], function($, Menu){
 
   new Menu({
     trigger : '#J-trigger-left',
+    callback : function(e, menuItem) {
+      if ($(menuItem).attr('id') == 'J-menu-id') {
+        console.log('你点击了J-menu-id');
+      }
+      if ($(menuItem).hasClass('J-menu-class')) {
+        console.log('你点击了J-menu-class');
+      }
+    },
     menu : [
       {
+        id        : 'J-menu-id',
         icon      : '.icon-tags',
         text      : 'Edit',
         cutshort  : 'Ctrl E',
-        action    : function(e) {
+        action    : function(e, data) {
           console.log(e);
           alert(123456);
         }
@@ -33,32 +42,43 @@ seajs.use(['$', 'menu'], function($, Menu){
         target    : '_blank'
       },
       {
-        text      : 'Copy'
+        text      : 'Copy',
+        disabled  : true,
+        cutshort  : 'Cmd Space'
       },
       {
         text      : 'Command',
         menu      : [
           {
-            text : 'Command A'
+            text : 'Command A',
+            class : 'J-menu-class'
           },
           {
-            text : 'Command B'
+            cutshort  : 'Alt S',
+            class : 'J-menu-class',
+            text : 'Command B',
+            action : 'http://www.google.com'
           },
           {
             icon      : '.icon-tags',
+            class : 'J-menu-class',
             text : 'Command C',
-            cutshort  : 'Alt S',
             menu : [
               { text : 'Command C - 1'},
               { text : 'Command C - 2'},
               { text : 'Command C - 3'},
-              { text : 'Command C - 4'},
-              { text : 'Command C - 5'}
+              { text : 'Command C - 4', action: function(e, data) {
+                window.open('http://www.baidu.com/');
+              }},
+              { text : 'Command C - 5', action : function(e, data) {
+                console.log(e, data);
+              }}
             ]
           }
         ]
       },
       {
+        cutshort  : 'Opt Ctrl U',
         text : '这个菜单的文字超级的长啊长啊长啊长啊长啊长'
       }
     ]
