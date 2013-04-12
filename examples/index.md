@@ -17,7 +17,7 @@ seajs.use(['$', 'menu'], function($, Menu){
 
   new Menu({
     trigger : '#J-trigger-left',
-    callback : function(e, menuItem) {
+    action : function(e, menuItem) {
       if ($(menuItem).attr('id') == 'J-menu-id') {
         console.log('你点击了J-menu-id');
       }

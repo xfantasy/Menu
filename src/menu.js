@@ -51,7 +51,7 @@ define(function(require, exports, module) {
       hasMask : true,
       template : template,
       disabled : false,            // 是否禁用菜单
-      callback : null              // 全局callback事件，在调用每个子菜单的callback后，会再次调用此事件
+      action   : null              // 全局callback事件，在调用每个子菜单的 action 后，会再次调用此事件
     },
 
 
@@ -72,8 +72,8 @@ define(function(require, exports, module) {
       },
       'click li' : function(e) {
         this.doAction(e);
-        var comnonCallback = this.get('callback');
-        comnonCallback && comnonCallback(e, $(e.target).closest('li'));
+        var comnonAction = this.get('action');
+        comnonAction && comnonAction(e, $(e.target).closest('li'));
       }
     },
 
@@ -82,10 +82,10 @@ define(function(require, exports, module) {
     setup : function() {
 
       this.bindToggleEvent();
+      this.bindCutshort();
 
       // 调用Overlay的方法，点击body隐藏菜单
       this._blurHide([this.get('trigger')]);
-
       this._tweakAlignDefaultValue();
 
       Menu.superclass.setup.call(this);
@@ -135,12 +135,16 @@ define(function(require, exports, module) {
           top  : 0
         };
 
+        // TODO: 当菜单同时超出上下边界时，需要配置滚动条
+        // 不要问我同时超出左右边界时怎么办，没见过这么变态的菜单
         var menuItemOffset = menuItem.offset();
-        if ((_offset.left + subMenu.width() + menuItemOffset.left) > $('body').width()) {
+        // 超出右边界
+        if ((_offset.left + subMenu.width() + menuItemOffset.left) > document.documentElement.clientWidth) {
           _offset.left = -subMenu.width();
         }
-        if ((menuItemOffset.top + subMenu.height()) > $('body').height()) {
-          _offset.top = $('body').height() - (menuItemOffset.top + subMenu.height()) - 5;
+        // 超出下边界
+        if ((menuItemOffset.top + subMenu.height()) > document.documentElement.clientHeight) {
+          _offset.top = document.documentElement.clientHeight - (menuItemOffset.top + subMenu.height()) - 5;
         }
         return _offset;
       })();
@@ -153,8 +157,7 @@ define(function(require, exports, module) {
     },
 
     itemMouseout : function(e) {
-      var menuItem = $(e.target).closest('li');
-      // menuItem.removeClass('active');
+      // var menuItem = $(e.target).closest('li');
     },
 
 
@@ -197,6 +200,10 @@ define(function(require, exports, module) {
 
 
 
+    /**
+     * 预定义的事件发生时，则显示出菜单来
+     * @return {[type]} [description]
+     */
     bindToggleEvent : function() {
       var that = this;
       var trigger = this.get('trigger');
@@ -211,6 +218,18 @@ define(function(require, exports, module) {
       })
     },
 
+
+    /**
+     * 全局快捷键事件
+     * @return {[type]} [description]
+     */
+    bindCutshort: function() {
+      /**
+       * 1. 搜罗所有的快捷键
+       * 2. 监听全局的keypress事件
+       * 3. 对比，如果有符合的，则回调之
+       */
+    },
 
 
     toggleMenu: function() {
@@ -235,19 +254,15 @@ define(function(require, exports, module) {
     // 调整所有菜单项的宽度到合适（即刚好展示在一行内）
     _adjustMenuWidth: function() {
       var that = this;
-
       $(that.element).show();
-
       (function(ulList) {
         for (var i = 0 , l = ulList.length; i < l; i++) {
           $(ulList[i]).show().width($(ulList[i]).width() + 15);
           if ($('>li>ul', ulList[i]).length) {
-            //$('>li>ul', ulList[i]).css('left', currentListWidth);
             arguments.callee($('>li>ul', ulList[i]));
           }
         }
       })($('>ul', this.element));
-
       $(that.element).hide();
     }
   });
