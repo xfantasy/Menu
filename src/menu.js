@@ -1,3 +1,16 @@
+/**
+ * TODO:
+ * 1. 快捷键支持
+ *   1.1 分离按键事件管理到cutshort.js
+ *   1.2 Menu自身只负责托管MenuList中的快捷键列表
+ *   1.3 cutshort.js在每次keyevent时，通知MenuList.js(即MenuList监听cutshort的事件)
+ *   1.4 由cutshort.js来提供多系统支持
+ * 2. 对菜单过长的情况做兼容性处理
+ * 3. 将Menu.js中，组件行为与DOM事件做完全分离，以期能通过外部调用触发对应的动作
+ *   3.1 doAction / click 事件的分离
+ *
+ */
+
 define(function(require, exports, module) {
 
   var $ = require('$'),
