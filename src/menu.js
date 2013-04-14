@@ -17,11 +17,10 @@ define(function(require, exports, module) {
       Overlay = require('overlay'),
       _ = require('underscore'),
       Templatable = require('templatable'),
+      Cutshort = require('./cutshort.js'),
       template = require('./menu.tpl');
 
   require('./style.css');
-
-
 
   // 用于在递归中保存上一次的处理器
   // TODO: 怎么把它移到一个更好的位置呢？
@@ -242,6 +241,21 @@ define(function(require, exports, module) {
        * 2. 监听全局的keypress事件
        * 3. 对比，如果有符合的，则回调之
        */
+       (function(list) {
+        for (var i = 0, l = list.length; i < l; i++) {
+          if (!list[i].cutshort) continue;
+          Cutshort.bindKeyEvent(list[i].cutshort, function(e, keyCombo) {
+            if (!list[i].action) return;
+
+            if (_.isString(list[i].action) && list[i].action.indexOf('http') == 0) {
+              window.open(list[i].action);
+            } else if (_.isFunction(list[i].action)) {
+              list[i].action();
+            }
+          });
+          if (list[i].menu) arguments.callee(list[i].menu);
+        };
+       })(this.model.menu)
     },
 
 
@@ -302,6 +316,7 @@ define(function(require, exports, module) {
         menu[i].uuid = list[i].uuid =  _.uniqueId('menu-');
         // 菜单文本
         menu[i].text = list[i].text;
+        if (list[i].action) menu[i].action = list[i].action;
 
         // id && class
         menu[i].id = list[i].id || undefined;
@@ -327,13 +342,14 @@ define(function(require, exports, module) {
         // 快捷键
         if (list[i].cutshort) {
           menu[i].cutshort = (function(cutshort) {
-            return $.map(cutshort.split(' '), function (el) {
-              if (platform === 'Mac') {
-                return el.replace(/(C|c)trl|(C|c)ommand|(C|c)md/g, '⌘').replace(/(A|a)lt|(O|o)ption|(O|o)pt/g, '⎇');
-              } else if (platform === 'PC'){
-                return el.replace(/(C|c)trl|(C|c)ommand|(C|c)md|⌘/g, 'Ctrl').replace(/(A|a)lt|(O|o)ption|(O|o)pt|⎇/g, 'Alt');
-              }
-            }).join('');
+            return Cutshort.convertKeyName(cutshort);
+            // return $.map(cutshort.split(' '), function (el) {
+            //   if (platform === 'Mac') {
+            //     return el.replace(/(C|c)trl|(C|c)ommand|(C|c)md/g, '⌘').replace(/(A|a)lt|(O|o)ption|(O|o)pt/g, '⎇');
+            //   } else if (platform === 'PC'){
+            //     return el.replace(/(C|c)trl|(C|c)ommand|(C|c)md|⌘/g, 'Ctrl').replace(/(A|a)lt|(O|o)ption|(O|o)pt|⎇/g, 'Alt');
+            //   }
+            // }).join('');
           })(list[i].cutshort);
         }
         if (list[i].menu) {
