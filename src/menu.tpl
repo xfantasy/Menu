@@ -18,7 +18,11 @@
         {{/if}}
 
         {{#if this.cutshort}}
-          <span class='pull-right cutshort'>{{this.cutshort}}</span>
+          <span class='pull-right cutshort'>
+            {{#each this.cutshort}}
+              {{this}}
+            {{/each}}
+          </span>
         {{/if}}
 
       </li>

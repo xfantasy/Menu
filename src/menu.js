@@ -197,6 +197,8 @@ define(function(require, exports, module) {
         }
       })(this.get('menu'));
 
+      console.log(1234, action);
+
       if (!action) return; // do nothing.
 
       // URL
