@@ -18,7 +18,7 @@ define(function(require, exports, module) {
       _ = require('underscore'),
       Templatable = require('templatable'),
       Cutshort = require('./cutshort.js'),
-      template = require('./menu.tpl');
+      template = require('./menu.tpl#');
 
   require('./style.css');
 
@@ -83,7 +83,10 @@ define(function(require, exports, module) {
         this.itemMouseout(e);
       },
       'click li' : function(e) {
-        this.doAction(e);
+        this.doAction($(e.target).closest('li').data('id'));
+        e.stopPropagation();
+        e.preventDefault();
+
         var comnonAction = this.get('action');
         comnonAction && comnonAction(e, $(e.target).closest('li'));
       }
@@ -179,11 +182,8 @@ define(function(require, exports, module) {
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
      */
-    doAction: function(e){
-      e.stopPropagation();
-      e.preventDefault();
-      var target = $(e.target).closest('li');
-      var uuid = target.data('id');
+    doAction: function(uuid) {
+      if (!uuid) return;
 
       var action = (function(list) {
         for (var i = 0, l = list.length; i < l; i++) {
@@ -205,7 +205,7 @@ define(function(require, exports, module) {
 
       // Action
       } else if (_.isFunction(action)) {
-        action(e);
+        action();
       }
 
     },
@@ -236,6 +236,7 @@ define(function(require, exports, module) {
      * @return {[type]} [description]
      */
     bindCutshort: function() {
+      var that = this;
       /**
        * 1. 搜罗所有的快捷键
        * 2. 监听全局的keypress事件
@@ -244,15 +245,11 @@ define(function(require, exports, module) {
        (function(list) {
         for (var i = 0, l = list.length; i < l; i++) {
           if (!list[i].cutshort) continue;
-          Cutshort.bindKeyEvent(list[i].cutshort, function(e, keyCombo) {
-            if (!list[i].action) return;
-
-            if (_.isString(list[i].action) && list[i].action.indexOf('http') == 0) {
-              window.open(list[i].action);
-            } else if (_.isFunction(list[i].action)) {
-              list[i].action();
-            }
-          });
+          (function(cutshort, uuid) {
+            Cutshort.bindKeyEvent(cutshort, function(e, keyCombo) {
+              that.doAction(uuid);
+            });
+          })(list[i].cutshort, list[i].uuid);
           if (list[i].menu) arguments.callee(list[i].menu);
         };
        })(this.model.menu)

@@ -3,7 +3,7 @@
 
     {{#recursive menu}}
       <li class='clearfix {{#if this.disabled}} disabled {{/if}}
-        {{#if this.class}} {{this.class}} {{/if}}' {{#if this.id}} id="{{this.id}}" {{/if}} data-id='{{this.uuid}}' >
+        {{#if this.class}} {{this.class}} {{/if}}' {{#if this.id}} id="{{this.id}}" {{/if}} data-uuid='{{this.uuid}}' >
 
         {{#if this.icon }}
           <i class='pull-left left-icon {{this.icon}}'></i>

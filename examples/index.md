@@ -1,6 +1,7 @@
 # 演示文档
 
 ---
+
 <link rel="stylesheet" type="text/css" href="http://assets.t326.alipay.net/alice/famicons/1.0.0/famicons.css">
 <link rel="stylesheet" type="text/css" href="http://assets.t326.alipay.net/al/alice.common.bizdev-1.3-SNAPSHOT-src.css">
 
@@ -31,8 +32,7 @@ seajs.use(['$', 'menu'], function($, Menu){
         icon      : '.icon-tags',
         text      : 'Edit',
         cutshort  : 'Ctrl E',
-        action    : function(e, data) {
-          console.log(e);
+        action    : function() {
           alert(123456);
         }
       },
