@@ -206,15 +206,15 @@ define(function(require, exports, module) {
       })(this.get('menu'));
 
       // URL
-      if (typeof action == 'string' && /^(http[s]?:\/\/.*)$/.test(action)) {
-        window.open(action);
+      if (typeof action == 'string') {
+        window.location.href = action;
 
       // Action
       } else if (_.isFunction(action)) {
         try{
           action(e, uuid);
         } catch(e) {
-          console.error(e);
+          console.error('action error: ' + e);
         }
       }
 
