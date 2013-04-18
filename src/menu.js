@@ -83,12 +83,13 @@ define(function(require, exports, module) {
         this.itemMouseout(e);
       },
       'click li' : function(e) {
-        this.doAction($(e.target).closest('li').data('uuid'));
+        this.doAction(e);
+        this.hide();
+
         e.stopPropagation();
         e.preventDefault();
 
-        var comnonAction = this.get('action');
-        comnonAction && comnonAction(e, $(e.target).closest('li'));
+
       }
     },
 
@@ -184,10 +185,11 @@ define(function(require, exports, module) {
 
     /**
      * 执行菜单的点击事件
-     * @param  {string} uuid [description]
+     * @param  {event} e [description]
      * @return {null}
      */
-    doAction: function(uuid) {
+    doAction: function(e) {
+      var uuid = $(e.target).closest('li').data('uuid')
       if (!uuid) return;
 
       var action = (function(list) {
@@ -211,9 +213,19 @@ define(function(require, exports, module) {
       // Action
       } else if (_.isFunction(action)) {
         try{
-          action();
+          action(e, uuid);
         } catch(e) {
           console.error(e);
+        }
+      }
+
+      // 公共方法
+      var comnonAction = this.get('action');
+      if (comnonAction) {
+        try{
+          comnonAction(e, uuid);
+        } catch(e) {
+          console.error('common action error : ' + e);
         }
       }
 
@@ -296,7 +308,7 @@ define(function(require, exports, module) {
           }
         }
       })($('>ul', this.element));
-      $(that.element).hide();
+      that.hide();
     }
   });
 
