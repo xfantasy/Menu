@@ -15,9 +15,9 @@
     "license": "MIT",
     "dependencies": {
         "$"             : "$",
-        "underscore"    : "gallery/underscore/1.4.4/underscore-debug",
+        "underscore"    : "gallery/underscore/1.4.4/underscore",
         "templatable"   : "arale/widget/1.0.3/templatable",
-        "overlay"       : "arale/overlay/1.0.0/overlay-debug"
+        "overlay"       : "arale/overlay/1.0.0/overlay"
     },
     "tests": ["menu"],
     "output": {

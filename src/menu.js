@@ -18,7 +18,7 @@ define(function(require, exports, module) {
       _ = require('underscore'),
       Templatable = require('templatable'),
       Cutshort = require('./cutshort.js'),
-      template = require('./menu.tpl#');
+      template = require('./menu.tpl');
 
   require('./style.css');
 
@@ -83,7 +83,7 @@ define(function(require, exports, module) {
         this.itemMouseout(e);
       },
       'click li' : function(e) {
-        this.doAction($(e.target).closest('li').data('id'));
+        this.doAction($(e.target).closest('li').data('uuid'));
         e.stopPropagation();
         e.preventDefault();
 
@@ -115,6 +115,11 @@ define(function(require, exports, module) {
       return this;
     },
 
+
+    hide : function() {
+      this.element.hide();
+      return this;
+    },
 
 
     render : function() {
@@ -179,8 +184,8 @@ define(function(require, exports, module) {
 
     /**
      * 执行菜单的点击事件
-     * @param  {[type]} e [description]
-     * @return {[type]}   [description]
+     * @param  {string} uuid [description]
+     * @return {null}
      */
     doAction: function(uuid) {
       if (!uuid) return;
@@ -197,8 +202,6 @@ define(function(require, exports, module) {
         }
       })(this.get('menu'));
 
-      console.log(1234, action);
-
       if (!action) return; // do nothing.
 
       // URL
@@ -207,7 +210,11 @@ define(function(require, exports, module) {
 
       // Action
       } else if (_.isFunction(action)) {
-        action();
+        try{
+          action();
+        } catch(e) {
+          console.error(e);
+        }
       }
 
     },
