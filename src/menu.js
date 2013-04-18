@@ -111,6 +111,7 @@ define(function(require, exports, module) {
 
     show : function() {
       Menu.superclass.show.call(this);
+      $(this.element).show();
       this._setPosition();
       $('li>ul', this.element).hide();
       return this;
