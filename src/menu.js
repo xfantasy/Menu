@@ -205,8 +205,6 @@ define(function(require, exports, module) {
         }
       })(this.get('menu'));
 
-      if (!action) return; // do nothing.
-
       // URL
       if (typeof action == 'string' && /^(http[s]?:\/\/.*)$/.test(action)) {
         window.open(action);
