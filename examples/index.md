@@ -39,7 +39,8 @@ seajs.use(['$', 'menu'], function($, Menu){
       {
         text      : 'Cut',
         url       : 'http://www.google.com/',
-        target    : '_blank'
+        target    : '_blank',
+        split     : true
       },
       {
         text      : 'Copy',
@@ -65,7 +66,7 @@ seajs.use(['$', 'menu'], function($, Menu){
             text : 'Command C',
             menu : [
               { text : 'Command C - 1'},
-              { text : 'Command C - 2'},
+              { text : 'Command C - 2', split : true},
               { text : 'Command C - 3'},
               { text : 'Command C - 4', action: function(e, data) {
                 window.open('http://www.baidu.com/');

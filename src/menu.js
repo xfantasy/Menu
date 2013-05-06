@@ -57,10 +57,14 @@ define(function(require, exports, module) {
       },
       // 定位配置
       align: {
-          baseXY: ['5px', '100%-1px']
+          baseXY: ['-1px', '100%-1px']
       },
       triggerType : 'click',       // 触发事件 ['click', 'rightClick', 'contextMenu']
       hasMask : true,
+      beforeShow : null,
+      afterShow : null,
+      beforeHide : null,
+      afterHid : null,
       template : template,
       disabled : false,            // 是否禁用菜单
       action   : null              // 全局callback事件，在调用每个子菜单的 action 后，会再次调用此事件
@@ -89,7 +93,6 @@ define(function(require, exports, module) {
         e.stopPropagation();
         e.preventDefault();
 
-
       }
     },
 
@@ -110,16 +113,28 @@ define(function(require, exports, module) {
 
 
     show : function() {
+      _.isFunction(this.get('beforeShow')) && this.get('beforeShow')();
+
       Menu.superclass.show.call(this);
       $(this.element).show();
+      $(this.get('trigger')).addClass('active');
       this._setPosition();
       $('li>ul', this.element).hide();
+
+      _.isFunction(this.get('afterShow')) && this.get('afterShow')();
       return this;
     },
 
 
     hide : function() {
+
+      _.isFunction(this.get('beforeHide')) && this.get('beforeHide')();
+
       this.element.hide();
+      $(this.get('trigger')).removeClass('active');
+
+      _.isFunction(this.get('afterHide')) && this.get('afterHide')();
+
       return this;
     },
 
@@ -158,7 +173,7 @@ define(function(require, exports, module) {
         };
 
         // TODO: 当菜单同时超出上下边界时，需要配置滚动条
-        // 不要问我同时超出左右边界时怎么办，没见过这么变态的菜单
+        // 同时超出左右边界时怎么办? 没见过这么变态的菜单!!
         var menuItemOffset = menuItem.offset();
         // 超出右边界
         if ((_offset.left + subMenu.width() + menuItemOffset.left) > document.documentElement.clientWidth) {
@@ -334,6 +349,8 @@ define(function(require, exports, module) {
         // 菜单文本
         menu[i].text = list[i].text;
         if (list[i].action) menu[i].action = list[i].action;
+        // 分割线
+        menu[i].split = list[i].split || false;
 
         // id && class
         menu[i].id = list[i].id || undefined;

@@ -3,6 +3,7 @@
 
     {{#recursive menu}}
       <li class='clearfix {{#if this.disabled}} disabled {{/if}}
+        {{#if this.split}} has-split-line {{/if}}
         {{#if this.class}} {{this.class}} {{/if}}' {{#if this.id}} id="{{this.id}}" {{/if}} data-uuid='{{this.uuid}}' >
 
         {{#if this.icon }}
