@@ -67,6 +67,7 @@ define(function(require, exports, module) {
       afterHid : null,
       template : template,
       disabled : false,            // 是否禁用菜单
+      context  : null,
       action   : null              // 全局callback事件，在调用每个子菜单的 action 后，会再次调用此事件
     },
 
@@ -205,6 +206,7 @@ define(function(require, exports, module) {
      * @return {null}
      */
     doAction: function(e) {
+      var context = this.get('context');
       var uuid = $(e.target).closest('li').data('uuid')
       if (!uuid) return;
 
@@ -227,7 +229,7 @@ define(function(require, exports, module) {
       // Action
       } else if (_.isFunction(action)) {
         try{
-          action(e, uuid);
+          action(e, uuid, context);
         } catch(e) {
           console.error('action error: ' + e);
         }
@@ -237,7 +239,7 @@ define(function(require, exports, module) {
       var comnonAction = this.get('action');
       if (comnonAction) {
         try{
-          comnonAction(e, uuid);
+          comnonAction(e, uuid, context);
         } catch(e) {
           console.error('common action error : ' + e);
         }
